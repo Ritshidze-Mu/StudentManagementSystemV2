@@ -1,0 +1,117 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.PrescriptionViewModel
+@{
+    ViewBag.Title = "Create Prescription";
+}
+
+<div class="container">
+    <h2 class="mb-4">Create Prescription</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-user-injured"></i> Patient Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Full Name:</dt>
+                <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
+
+                <dt class="col-sm-3">Student Number:</dt>
+                <dd class="col-sm-9">@Model.StudentNumber</dd>
+            </dl>
+        </div>
+    </div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    }
+
+    @using (Html.BeginForm("PrescriptionForm", "Nurse", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.AppointmentId)
+        @Html.HiddenFor(m => m.FirstName)
+        @Html.HiddenFor(m => m.LastName)
+        @Html.HiddenFor(m => m.StudentNumber)
+        @Html.HiddenFor(m => m.NurseId)
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-prescription-bottle-alt"></i> Medication Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Medication)
+                    @Html.TextBoxFor(m => m.Medication, new { @class = "form-control", required = "required" })
+                    <div class="invalid-feedback">Please enter medication name</div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MedicationName)
+                    @Html.TextBoxFor(m => m.MedicationName, new
+                    {
+                        @class = "form-control",
+                        required = "required",
+                        placeholder = "Enter medication name"
+                    })
+                    @Html.ValidationMessageFor(m => m.MedicationName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Dosage)
+                            @Html.TextBoxFor(m => m.Dosage, new { @class = "form-control", required = "required" })
+                            <div class="invalid-feedback">Please enter dosage</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Frequency)
+                            @Html.TextBoxFor(m => m.Frequency, new { @class = "form-control", required = "required" })
+                            <div class="invalid-feedback">Please enter frequency</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Duration)
+                            @Html.TextBoxFor(m => m.Duration, new { @class = "form-control", required = "required" })
+                            <div class="invalid-feedback">Please enter duration</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Prescription
+            </button>
+            <a href="@Url.Action("DiagnosisForm", new { id = Model.AppointmentId })"
+               class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Diagnosis
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Client-side validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

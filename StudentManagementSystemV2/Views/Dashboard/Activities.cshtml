@@ -1,0 +1,91 @@
+﻿@model List<StudentManagementSystemV2.Models.ViewModels.ActivityItem>
+@{
+    ViewBag.Title = "All Activities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-bell me-2"></i> All Activities</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="activity-feed">
+                            @foreach (var activity in Model)
+                            {
+                                <div class="activity-item">
+                                    <div class="activity-icon bg-@activity.IconColor">
+                                        <i class="fas fa-@activity.Icon"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-message">@activity.Message</div>
+                                        <div class="activity-time text-muted">
+                                            <small>@activity.Timestamp.ToString("g")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light mb-0">
+                            <i class="fas fa-info-circle me-2"></i> No activities to display.
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .activity-feed {
+            padding-left: 15px;
+        }
+
+        .activity-item {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 30px;
+            border-left: 2px solid #eee;
+            margin-bottom: 15px;
+        }
+
+            .activity-item:last-child {
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+
+            .activity-item .activity-icon {
+                position: absolute;
+                left: -15px;
+                top: 0;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+
+            .activity-item .activity-content {
+                padding-left: 15px;
+            }
+
+            .activity-item .activity-message {
+                margin-bottom: 5px;
+            }
+    </style>
+}

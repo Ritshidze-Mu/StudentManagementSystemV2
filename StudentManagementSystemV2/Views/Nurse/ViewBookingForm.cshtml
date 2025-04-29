@@ -1,0 +1,79 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.AppointmentListViewModel
+@{
+    ViewBag.Title = "Booking Form Details";
+}
+
+<div class="container">
+    <h2 class="mb-4">Appointment Booking Details</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th class="w-25">Date</th>
+                    <td>@Model.AppointmentDate.ToString("dddd, dd MMMM yyyy")</td>
+                </tr>
+                <tr>
+                    <th>Time</th>
+                    <td>@Model.AppointmentTime.ToString(@"hh\:mm")</td>
+                </tr>
+                <tr>
+                    <th>Reason for Visit</th>
+                    <td>@Model.Reason</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-4">Patient Information</h2>
+
+    @if (Model.User != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="w-25">Full Name</th>
+                        <td>@($"{Model.User.FirstName} {Model.User.LastName}")</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>@Model.User.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Phone Number</th>
+                        <td>@Model.User.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <th>ID Number</th>
+                        <td>@(Model.User.IDNumber ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <th>Gender</th>
+                        <td>@(Model.User.Gender ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <th>Date of Birth</th>
+                        <td>@(Model.User.DateOfBirth?.ToString("yyyy-MM-dd") ?? "N/A")</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>@(Model.User.Address ?? "N/A")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No patient data found.
+        </div>
+    }
+
+    <div class="mt-4">
+        <a href="@Url.Action("Dashboard")" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>

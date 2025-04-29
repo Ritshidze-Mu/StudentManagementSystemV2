@@ -1,0 +1,212 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.DiagnosisViewModel
+@{
+    ViewBag.Title = "Patient Diagnosis";
+}
+
+<div class="container">
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+    <h2 class="mb-4"><i class="fas fa-stethoscope me-2"></i> Patient Diagnosis</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-user-injured me-2"></i> Patient Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Full Name:</dt>
+                <dd class="col-sm-9">@Model.FirstName @Model.LastName</dd>
+
+                <dt class="col-sm-3">Student Number:</dt>
+                <dd class="col-sm-9">@Model.StudentNumber</dd>
+
+                <dt class="col-sm-3">Appointment ID:</dt>
+                <dd class="col-sm-9">@Model.AppointmentId</dd>
+            </dl>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("DiagnosisForm", "Nurse", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.AppointmentId)
+        @Html.HiddenFor(m => m.FirstName)
+        @Html.HiddenFor(m => m.LastName)
+        @Html.HiddenFor(m => m.StudentNumber)
+        @Html.HiddenFor(m => m.NurseId)
+
+        <!-- Vital Signs Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-heartbeat me-2"></i> Vital Signs</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.BloodPressure, "Blood Pressure (mmHg)")
+                            @Html.TextBoxFor(m => m.BloodPressure, new { @class = "form-control", required = "required", placeholder = "120/80" })
+                            @Html.ValidationMessageFor(m => m.BloodPressure, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Temperature, "Temperature (°C)")
+                            @Html.TextBoxFor(m => m.Temperature, new { @class = "form-control", required = "required", placeholder = "36.5" })
+                            @Html.ValidationMessageFor(m => m.Temperature, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Pulse, "Pulse (bpm)")
+                            @Html.TextBoxFor(m => m.Pulse, new { @class = "form-control", required = "required", placeholder = "72" })
+                            @Html.ValidationMessageFor(m => m.Pulse, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.RespiratoryRate, "Respiratory Rate (breaths/min)")
+                            @Html.TextBoxFor(m => m.RespiratoryRate, new { @class = "form-control", required = "required", placeholder = "16" })
+                            @Html.ValidationMessageFor(m => m.RespiratoryRate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-comment-medical me-2"></i> Assessment</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-4">
+                    @Html.LabelFor(m => m.ChiefComplaint, "Chief Complaint")
+                    @Html.TextAreaFor(m => m.ChiefComplaint, new { @class = "form-control", rows = 3, required = "required", placeholder = "Patient's primary reason for visit..." })
+                    @Html.ValidationMessageFor(m => m.ChiefComplaint, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-4">
+                    @Html.LabelFor(m => m.NursesAssessment, "Nurse's Assessment")
+                    @Html.TextAreaFor(m => m.NursesAssessment, new { @class = "form-control", rows = 3, required = "required", placeholder = "Nurse's observations and findings..." })
+                    @Html.ValidationMessageFor(m => m.NursesAssessment, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-4">
+                    @Html.LabelFor(m => m.DiagnosisDescription, "Diagnosis")
+                    @Html.TextAreaFor(m => m.DiagnosisDescription, new { @class = "form-control", rows = 3, required = "required", placeholder = "Diagnostic conclusion..." })
+                    @Html.ValidationMessageFor(m => m.DiagnosisDescription, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Plan, "Treatment Plan")
+                    @Html.TextAreaFor(m => m.Plan, new { @class = "form-control", rows = 3, required = "required", placeholder = "Recommended treatment and follow-up..." })
+                    @Html.ValidationMessageFor(m => m.Plan, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-group d-flex justify-content-between">
+            <div>
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-save me-2"></i> Save Diagnosis
+                </button>
+                <a href="@Url.Action("TodaysAppointments")" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Appointments
+                </a>
+            </div>
+
+            @if (Model.AppointmentId > 0)
+            {
+                <div>
+                    <a href="@Url.Action("PrescriptionForm", new { id = Model.AppointmentId })"
+                       class="btn btn-primary btn-lg">
+                        <i class="fas fa-prescription-bottle-alt me-2"></i> Create Prescription
+                    </a>
+                    <a href="@Url.Action("ReferralForm", new { id = Model.AppointmentId })"
+                       class="btn btn-warning btn-lg">
+                        <i class="fas fa-user-md me-2"></i> Refer to Doctor
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            font-weight: 600;
+        }
+
+        .form-control {
+            border-radius: 0.5rem;
+        }
+
+        .btn-lg {
+            padding: 0.5rem 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Enhanced form validation
+            $('.needs-validation').on('submit', function (event) {
+                var form = $(this);
+                if (form[0].checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // Scroll to first error
+                    $('html, body').animate({
+                        scrollTop: $(".field-validation-error").first().offset().top - 100
+                    }, 500);
+                }
+                form.addClass('was-validated');
+            });
+
+            // Auto-close alerts after 5 seconds
+            setTimeout(function () {
+                $('.alert').fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+
+            // Add input masks for better data entry
+            $('#BloodPressure').inputmask('999/999', { placeholder: '___/___' });
+            $('#Temperature').inputmask('99.9', { placeholder: '__._' });
+            $('#Pulse').inputmask('999', { placeholder: '___' });
+            $('#RespiratoryRate').inputmask('99', { placeholder: '__' });
+        });
+    </script>
+}

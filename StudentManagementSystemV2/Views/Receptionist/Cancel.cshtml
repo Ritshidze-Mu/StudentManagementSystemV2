@@ -1,0 +1,31 @@
+﻿@model StudentManagementSystemV2.Models.Appointment
+@{
+    ViewBag.Title = "Cancel Appointment";
+}
+
+<h2>Cancel Appointment</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        <label>Patient: @Model.User.FirstName @Model.User.LastName</label>
+    </div>
+
+    <div class="form-group">
+        <label>Date: @Model.AppointmentDate.ToShortDateString()</label>
+    </div>
+
+    <div class="form-group">
+        <label>Time: @Model.AppointmentTime.ToString("hh\\:mm")</label>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CancellationReason, "Reason for Cancellation")
+        @Html.TextAreaFor(model => model.CancellationReason, new { @class = "form-control", rows = 3 })
+    </div>
+
+    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+}

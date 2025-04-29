@@ -1,0 +1,37 @@
+﻿@model StudentManagementSystemV2.Models.Appointment
+@{
+    ViewBag.Title = "Reschedule Appointment";
+}
+
+<h2>Reschedule Appointment</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        <label>Patient: @Model.User.FirstName @Model.User.LastName</label>
+    </div>
+
+    <div class="form-group">
+        <label>Current Date: @Model.AppointmentDate.ToShortDateString()</label>
+    </div>
+
+    <div class="form-group">
+        <label>Current Time: @Model.AppointmentTime.ToString("hh\\:mm")</label>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("New Date")
+        @Html.TextBox("newDate", DateTime.Today.ToString("yyyy-MM-dd"),
+            new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("New Time")
+        @Html.TextBox("newTime", "09:00", new { @class = "form-control", type = "time" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Reschedule</button>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+}

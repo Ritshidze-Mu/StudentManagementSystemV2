@@ -1,0 +1,212 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.AppointmentViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>@ViewBag.Title</h2>
+            <hr />
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Create", "Appointments", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        <!-- 1. Patient Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>1. Patient Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.LastName, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.StudentNumber, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.StudentNumber, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(m => m.StudentNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Appointment Details -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>2. Appointment Details</h4>
+            </div>
+            <div class="card-body">
+                @Html.TextBoxFor(model => model.AppointmentDate, new { @class = "form-control", type = "date", id = "AppointmentDate" })
+                @Html.DropDownListFor(model => model.SelectedTimeSlot, Model.AvailableTimeSlots, "-- Select Time Slot --", new { @class = "form-control", id = "timeSlotDropdown" })
+            </div>
+        </div>
+
+        <!-- 3. Reason for Visit -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>3. Reason for Visit</h4>
+            </div>
+            <div class="card-body">
+                @Html.DropDownListFor(model => model.Reason, Model.ReasonOptions, "-- Select Reason --", new { @class = "form-control", id = "reasonDropdown" })
+            </div>
+        </div>
+
+
+
+        <!-- 4. Additional Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>4. Additional Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    @Html.TextAreaFor(m => m.AdditionalInfo, new { @class = "form-control", rows = 3, placeholder = "Any additional information..." })
+                </div>
+            </div>
+        </div>
+      
+
+
+        <!-- 5. Consent and Confirmation -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>5. Consent and Confirmation</h4>
+    </div>
+    <div class="card-body">
+        <div class="form-group form-check">
+            @Html.CheckBoxFor(m => m.ConfirmedDetails, new { @class = "form-check-input" })
+            @Html.LabelFor(m => m.ConfirmedDetails, new { @class = "form-check-label" })
+            @Html.ValidationMessageFor(m => m.ConfirmedDetails, "", new { @class = "text-danger" })
+        </div>
+        @if (!Model.ConsentForTreatment)
+        {
+            <div class="form-group form-check">
+                @Html.CheckBoxFor(m => m.ConsentForTreatment, new { @class = "form-check-input" })
+                @Html.LabelFor(m => m.ConsentForTreatment, new { @class = "form-check-label" })
+            </div>
+        }
+    </div>
+
+    <!-- Select Nurse Dropdown -->
+    @Html.HiddenFor(m => m.SelectedNurseId)
+</div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-calendar-check"></i> Book Appointment
+            </button>
+        </div>
+
+        <div class="card-footer">
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Function to load time slots
+            function loadTimeSlots() {
+                var selectedReason = $('#reasonDropdown').val();
+                var selectedDate = $('#AppointmentDate').val();
+
+                if (selectedReason && selectedDate) {
+                    // Show loading state
+                    $('#timeSlotDropdown').empty().prop('disabled', true)
+                        .append('<option value="">Loading time slots...</option>');
+
+                    $.ajax({
+                        url: '@Url.Action("GetTimeSlots", "Appointments")',
+                        type: 'GET',
+                        data: {
+                            dateString: selectedDate,
+                            reason: selectedReason
+                        },
+                        success: function (data) {
+                            $('#timeSlotDropdown').empty();
+
+                            if (data.error) {
+                                $('#timeSlotDropdown')
+                                    .append('<option value="" disabled>' + data.error + '</option>');
+                            }
+                            else if (data.length > 0) {
+                                $('#timeSlotDropdown')
+                                    .append('<option value="">-- Select Time Slot --</option>');
+
+                                // Group slots by time and show available nurses
+                                var timeSlots = {};
+                                $.each(data, function (index, slot) {
+                                    if (!timeSlots[slot.Time]) {
+                                        timeSlots[slot.Time] = [];
+                                    }
+                                    timeSlots[slot.Time].push(slot);
+                                });
+
+                                // Add options for each time slot
+                                $.each(timeSlots, function (time, slots) {
+                                    var optionText = time + ' - Available with: ' +
+                                        slots.map(s => s.NurseName).join(', ');
+
+                                    $('#timeSlotDropdown').append(
+                                        $('<option>', {
+                                            value: time,
+                                            text: optionText,
+                                            'data-nurse-id': slots[0].NurseId // Default to first nurse
+                                        })
+                                    );
+                                });
+                            }
+                            else {
+                                $('#timeSlotDropdown')
+                                    .append('<option value="" disabled>No available slots for selected date</option>');
+                            }
+
+                            $('#timeSlotDropdown').prop('disabled', false);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error loading time slots:', error);
+                            $('#timeSlotDropdown').empty()
+                                .append('<option value="" disabled>Error loading time slots</option>');
+                        }
+                    });
+                }
+            }
+
+            // Load time slots when either date or reason changes
+            $('#AppointmentDate, #reasonDropdown').change(function() {
+                loadTimeSlots();
+                $('#SelectedNurseId').val(''); // Clear previous nurse selection
+            });
+
+            // Handle time slot selection
+            $('#timeSlotDropdown').change(function () {
+                var selectedOption = $(this).find('option:selected');
+                var nurseId = selectedOption.data('nurse-id');
+                $('#SelectedNurseId').val(nurseId);
+
+                // You could add additional logic here to show nurse details
+                console.log('Selected nurse ID:', nurseId);
+            });
+
+            // Initial load if values are already selected
+            if ($('#reasonDropdown').val() && $('#AppointmentDate').val()) {
+                loadTimeSlots();
+            }
+        });
+    </script>
+}

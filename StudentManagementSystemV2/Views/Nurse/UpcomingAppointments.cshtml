@@ -1,0 +1,30 @@
+﻿@model List<StudentManagementSystemV2.Models.Appointment>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Patient</th>
+           
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appt in Model)
+            {
+                <tr>
+                    <td>@appt.AppointmentDate.ToShortDateString()</td>
+                    <td>@appt.AppointmentDate.ToShortTimeString()</td>
+                    <td>@appt.FirstName @appt.LastName</td>
+                   
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No upcoming appointments.</p>
+}

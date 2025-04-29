@@ -1,0 +1,47 @@
+﻿@model List<StudentManagementSystemV2.Models.ViewModels.MedicalHistoryItem>
+
+@{
+    ViewBag.Title = "Medical History";
+}
+
+<div class="container">
+    <h2><i class="fas fa-history me-2"></i> Medical History</h2>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge @(item.Type == "Diagnosis" ? "bg-primary" :
+                                                     item.Type == "Prescription" ? "bg-success" : "bg-warning")">
+                                        @item.Type
+                                    </span>
+                                </td>
+                                <td>@item.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No medical history records found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

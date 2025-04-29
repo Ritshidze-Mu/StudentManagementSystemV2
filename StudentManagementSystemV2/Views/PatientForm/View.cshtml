@@ -1,0 +1,166 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.PatientFormViewModel
+@{
+    ViewBag.Title = "View Patient Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-user-circle me-2"></i> @ViewBag.Title</h2>
+            <div class="d-flex justify-content-end">
+                <a href="@Url.Action("Edit", "PatientForm")" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i> Edit Information
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-id-card me-2"></i> Personal Information</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Full Name:</dt>
+                        <dd class="col-sm-8">@Model.FirstName @Model.LastName</dd>
+
+                        dt class="col-sm-4">StudentNumber:</dt>
+                        <dd class="col-sm-8">@Model.StudentNumber</dd>
+
+                        <dt class="col-sm-4">Date of Birth:</dt>
+                        <dd class="col-sm-8">@Model.DateOfBirth.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Gender:</dt>
+                        <dd class="col-sm-8">@Model.Gender</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Phone:</dt>
+                        <dd class="col-sm-8">@Model.PhoneNumber</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Information -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-home me-2"></i> Address Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-2">Street:</dt>
+                <dd class="col-sm-10">@Model.StreetAddress</dd>
+
+                <dt class="col-sm-2">City:</dt>
+                <dd class="col-sm-10">@Model.City</dd>
+
+                <dt class="col-sm-2">Province:</dt>
+                <dd class="col-sm-10">@Model.Province</dd>
+
+                <dt class="col-sm-2">Postal Code:</dt>
+                <dd class="col-sm-10">@Model.PostalCode</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Medical Information -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-heartbeat me-2"></i> Medical Information</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Allergies</h5>
+                    <p>@(string.IsNullOrEmpty(Model.Allergies) ? "None reported" : Model.Allergies)</p>
+
+                    <h5>Current Medications</h5>
+                    <p>@(string.IsNullOrEmpty(Model.CurrentMedications) ? "None reported" : Model.CurrentMedications)</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Pre-existing Conditions</h5>
+                    <p>@(string.IsNullOrEmpty(Model.PreExistingConditions) ? "None reported" : Model.PreExistingConditions)</p>
+
+                    @if (Model.HasDisability)
+                    {
+                        <h5>Disability Details</h5>
+                        <p>@Model.DisabilityDetails</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Contact -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-phone-alt me-2"></i> Emergency Contact</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Name:</dt>
+                <dd class="col-sm-9">@Model.EmergencyContactName</dd>
+
+                <dt class="col-sm-3">Relationship:</dt>
+                <dd class="col-sm-9">@Model.EmergencyContactRelationship</dd>
+
+                <dt class="col-sm-3">Phone:</dt>
+                <dd class="col-sm-9">@Model.EmergencyContactPhone</dd>
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.EmergencyContactEmail</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Consents -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-file-signature me-2"></i> Consents & Agreements</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" checked="@Model.ConsentForTreatment" disabled>
+                <label class="form-check-label">Consent for Treatment</label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" checked="@Model.ConfidentialityAgreement" disabled>
+                <label class="form-check-label">Confidentiality Agreement</label>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" checked="@Model.ConsentForStudentCare" disabled>
+                <label class="form-check-label">Consent for Student Care</label>
+            </div>
+            <div class="mt-3">
+                <strong>Preferred Communication Method:</strong> @Model.CommunicationMethod
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        dt {
+            font-weight: 600;
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            font-size: 1.1rem;
+        }
+    </style>
+}

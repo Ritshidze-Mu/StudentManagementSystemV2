@@ -1,0 +1,48 @@
+﻿@model StudentManagementSystemV2.Models.Appointment
+
+@{
+    ViewBag.Title = "Appointment Details";
+}
+
+<div class="container">
+    <h2>Appointment Details</h2>
+    <hr />
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Date:</dt>
+                <dd class="col-sm-9">@Model.AppointmentDate.ToString("dddd, MMMM dd, yyyy")</dd>
+
+                <dt class="col-sm-3">Time:</dt>
+                <dd class="col-sm-9">@Model.AppointmentTime.ToString("hh:mm tt")</dd>
+
+                <dt class="col-sm-3">Nurse:</dt>
+                <dd class="col-sm-9">@(Model.Nurse?.Name ?? "Any available nurse")</dd>
+
+                <dt class="col-sm-3">Reason:</dt>
+                <dd class="col-sm-9">@Model.Reason</dd>
+
+                <dt class="col-sm-3">Additional Info:</dt>
+                <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.AdditionalInfo) ? "None" : Model.AdditionalInfo)</dd>
+
+                <dt class="col-sm-3">Status:</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.Status == "Confirmed" ? "bg-success" : "bg-warning")">
+                        @Model.Status
+                    </span>
+                </dd>
+            </dl>
+
+            <div class="mt-4">
+                
+                <a href="@Url.Action("Cancel", new { id = Model.Id })" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Cancel Appointment
+                </a>
+                <a href="@Url.Action("Index", "Dashboard")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

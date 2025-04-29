@@ -1,0 +1,44 @@
+﻿@model List<StudentManagementSystemV2.Models.Diagnosis>
+
+@{
+    ViewBag.Title = "My Diagnoses";
+}
+
+<div class="container">
+    <h2><i class="fas fa-stethoscope me-2"></i> My Diagnoses</h2>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                foreach (var diagnosis in Model)
+                {
+                    <div class="diagnosis-item mb-4 p-3 border rounded">
+                        <h4>@diagnosis.Appointment.AppointmentDate.ToString("dd/MM/yyyy")</h4>
+                        <div class="mb-2">
+                            <strong>Diagnosis:</strong> @diagnosis.DiagnosisDescription
+                        </div>
+                        @if (!string.IsNullOrEmpty(diagnosis.NursesAssessment))
+                        {
+                            <div class="mb-2">
+                                <strong>Assessment:</strong> @diagnosis.NursesAssessment
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(diagnosis.Plan))
+                        {
+                            <div>
+                                <strong>Plan:</strong> @diagnosis.Plan
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No diagnosis records found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

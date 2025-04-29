@@ -1,0 +1,259 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.StudentViewModel
+@{
+    ViewBag.Title = "Student Registration";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Student Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .registration-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .registration-header h2 {
+                color: var(--dark-color);
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+            .form-section h4 {
+                color: var(--dark-color);
+                margin-bottom: 20px;
+                font-size: 1.2rem;
+                font-weight: 500;
+            }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--secondary-color);
+                transform: translateY(-2px);
+            }
+
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+
+        .validation-summary-errors ul {
+            padding-left: 0;
+            list-style: none;
+            color: var(--danger-color);
+        }
+
+        .field-validation-error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+        }
+
+        .alert-success {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+
+        .gender-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .dob-input::-webkit-calendar-picker-indicator {
+            filter: invert(0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="registration-container">
+            <div class="registration-header">
+                <h2>Student Registration</h2>
+                <p class="text-muted">Please fill in all required fields to complete your registration</p>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mb-4">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @using (Html.BeginForm("Register", "Student", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h4><i class="fas fa-user me-2"></i> Personal Information</h4>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your first name" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "field-validation-error" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your last name" } })
+                            @Html.ValidationMessageFor(model => model.Surname, "", new { @class = "field-validation-error" })
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control dob-input", type = "date" } })
+                            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "field-validation-error" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.SelectedGender, htmlAttributes: new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.SelectedGender, Model.GenderOptions, "Select Gender", new { @class = "form-control gender-select" })
+                            @Html.ValidationMessageFor(model => model.SelectedGender, "", new { @class = "field-validation-error" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information Section -->
+                <div class="form-section">
+                    <h4><i class="fas fa-graduation-cap me-2"></i> Academic Information</h4>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.IdNumber, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.IdNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your ID number" } })
+                            @Html.ValidationMessageFor(model => model.IdNumber, "", new { @class = "field-validation-error" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.StudentNumber, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.StudentNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your student number" } })
+                            @Html.ValidationMessageFor(model => model.StudentNumber, "", new { @class = "field-validation-error" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                    <h4><i class="fas fa-envelope me-2"></i> Contact Information</h4>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your email address", type = "email" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "field-validation-error" })
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "form-label" })
+                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your phone number" } })
+                            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "field-validation-error" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Security Section -->
+                <div class="form-section">
+                    <h4><i class="fas fa-lock me-2"></i> Account Security</h4>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "form-label" })
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Create a password" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "field-validation-error" })
+                            <small class="form-text text-muted">Minimum 6 characters</small>
+                        </div>
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "form-label" })
+                            @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm your password" })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "field-validation-error" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i> Complete Registration
+                    </button>
+                </div>
+                <div class="auth-footer">
+                    <p>You have an account? @Html.ActionLink("Log in ", "Login", "Account")</p>
+
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery Validation -->
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>

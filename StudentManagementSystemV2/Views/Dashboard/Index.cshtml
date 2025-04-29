@@ -1,0 +1,336 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Welcome Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-banner p-4 rounded @(Model.HasCompletedPatientForm ? "bg-success" : "bg-warning") text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="fas fa-user-md me-2"></i> Welcome, @(!string.IsNullOrEmpty(Model.UserName) ? Model.UserName : "User")!</h2>
+                        @if (Model.HasCompletedPatientForm)
+                        {
+                            <p class="mb-0">Your patient profile is complete.</p>
+                        }
+                        else
+                        {
+                            <p class="mb-0">Please complete your patient information form.</p>
+                        }
+                    </div>
+                    @if (!Model.HasCompletedPatientForm)
+                    {
+                        <a href="@Url.Action("Create", "PatientForm")" class="btn btn-light">
+                            <i class="fas fa-file-alt me-2"></i> Complete Form
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card h-100 border-primary">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
+                    <h3>@(Model.UpcomingAppointments?.Count ?? 0)</h3>
+                    <h4>Upcoming Appointments</h4>
+                    <a href="@Url.Action("Create", "Appointments")" class="btn btn-outline-primary mt-2">Book New</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card h-100 border-success">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-medical fa-3x text-success mb-3"></i>
+                    <h3>@(Model.HasCompletedPatientForm ? "Complete" : "Pending")</h3>
+                    <h4>Patient Profile</h4>
+                    <a href="@Url.Action(Model.HasCompletedPatientForm ? "Edit" : "Create", "PatientForm")"
+                       class="btn btn-outline-success mt-2">
+                        @(Model.HasCompletedPatientForm ? "View/Edit" : "Complete Now")
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-info">
+                <div class="card-body text-center">
+                    <i class="fas fa-history fa-3x text-info mb-3"></i>
+                    <h3>@Model.PastAppointmentsCount</h3>
+                    <h4>Past Visits</h4>
+                    <a href="@Url.Action("History", "Appointments")" class="btn btn-outline-info mt-2">View History</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Information Access Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-stethoscope me-2"></i> My Diagnoses</h4>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-file-medical-alt fa-4x text-primary mb-3"></i>
+                    <p>View your complete diagnosis history and medical assessments</p>
+                    <a href="@Url.Action("Diagnoses", "Dashboard")" class="btn btn-primary">
+                        View Diagnoses <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-prescription-bottle-alt me-2"></i> My Prescriptions</h4>
+                </div>
+                <div class="card-body text-center">
+                    <i class="fas fa-pills fa-4x text-success mb-3"></i>
+                    <p>Access your current and past medication prescriptions</p>
+                    <a href="@Url.Action("Prescriptions", "Dashboard")" class="btn btn-success">
+                        View Prescriptions <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-calendar-alt me-2"></i> Upcoming Appointments</h4>
+                    <a href="@Url.Action("Create", "Appointments")" class="btn btn-sm btn-light">
+                        <i class="fas fa-plus me-1"></i> New Appointment
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.UpcomingAppointments != null && Model.UpcomingAppointments.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Provider</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in Model.UpcomingAppointments)
+                                    {
+                                        <tr>
+                                            <td>@appointment.AppointmentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@(appointment.Nurse?.Name ?? "Any available")</td>
+                                            <td>@appointment.Reason</td>
+                                            <td>
+                                                <span class="badge @(appointment.Status == "Confirmed" ? "bg-success" : "bg-warning")">
+                                                    @appointment.Status
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="@Url.Action("Details", "Appointments", new { id = appointment.Id })"
+                                                       class="btn btn-info" title="View Details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Edit", "Appointments", new { id = appointment.Id })"
+                                                       class="btn btn-primary" title="Reschedule">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle me-2"></i> You have no upcoming appointments.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions & Recent Activity -->
+    <div class="row">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <div class="card h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0"><i class="fas fa-bolt me-2"></i> Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="@Url.Action("Create", "Appointments")" class="btn btn-action btn-primary w-100 h-100 py-3">
+                                <i class="fas fa-calendar-plus fa-2x mb-2"></i>
+                                <div>Book Appointment</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("MedicalHistory", "Dashboard")" class="btn btn-action btn-success w-100 h-100 py-3">
+                                <i class="fas fa-file-medical fa-2x mb-2"></i>
+                                <div>Medical History</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Edit", "PatientForm")" class="btn btn-action btn-info w-100 h-100 py-3">
+                                <i class="fas fa-user-edit fa-2x mb-2"></i>
+                                <div>Update Profile</div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Prescriptions", "Dashboard")" class="btn btn-action btn-warning w-100 h-100 py-3">
+                                <i class="fas fa-prescription-bottle-alt fa-2x mb-2"></i>
+                                <div>My Prescriptions</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0"><i class="fas fa-bell me-2"></i> Recent Activity</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentActivities != null && Model.RecentActivities.Any())
+                    {
+                        <div class="activity-feed">
+                            @foreach (var activity in Model.RecentActivities)
+                            {
+                                <div class="activity-item">
+                                    <div class="activity-icon bg-@activity.IconColor">
+                                        <i class="fas fa-@activity.Icon"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-message">@activity.Message</div>
+                                        <div class="activity-time text-muted">
+                                            <small>@activity.Timestamp.ToString("g")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-light mb-0">
+                            <i class="fas fa-info-circle me-2"></i> No recent activity to display.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .welcome-banner {
+            transition: all 0.3s ease;
+        }
+
+        .btn-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+            .btn-action:hover {
+                transform: translateY(-3px);
+                text-decoration: none;
+            }
+
+        .activity-feed {
+            padding-left: 15px;
+        }
+
+        .activity-item {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 30px;
+            border-left: 2px solid #eee;
+        }
+
+            .activity-item:last-child {
+                padding-bottom: 0;
+                border-left: 2px solid transparent;
+            }
+
+            .activity-item .activity-icon {
+                position: absolute;
+                left: -15px;
+                top: 0;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+
+            .activity-item .activity-content {
+                padding-left: 15px;
+            }
+
+            .activity-item .activity-message {
+                margin-bottom: 5px;
+            }
+
+        .bg-primary {
+            background-color: #3498db !important;
+        }
+
+        .bg-success {
+            background-color: #2ecc71 !important;
+        }
+
+        .bg-warning {
+            background-color: #f39c12 !important;
+        }
+
+        .bg-info {
+            background-color: #17a2b8 !important;
+        }
+
+        .bg-secondary {
+            background-color: #7f8c8d !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[title]').tooltip();
+
+            setTimeout(function () {
+                $('.alert').fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}

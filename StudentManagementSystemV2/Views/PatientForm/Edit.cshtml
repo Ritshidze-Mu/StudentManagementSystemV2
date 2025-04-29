@@ -1,0 +1,296 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.PatientFormViewModel
+@{
+    ViewBag.Title = "Edit Patient Information";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>@ViewBag.Title</h2>
+            <p class="lead">Update your patient information as needed.</p>
+            <hr />
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Edit", "PatientForm", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>1. Demographic Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.LastName, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.StudentNumber, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.StudentNumber,
+                            new
+                                 {
+                                @class = "form-control",
+                                placeholder = "Enter 8-digit student number",
+                                maxlength = "8",
+                                pattern = @"\d{8}",
+                                title = "8 digits only"
+                            })
+                        @Html.ValidationMessageFor(m => m.StudentNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.DateOfBirth, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.DateOfBirth, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker", placeholder = "DD/MM/YYYY" })
+                        @Html.ValidationMessageFor(m => m.DateOfBirth, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Gender, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.Gender, Model.GenderOptions, "Select Gender", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Address Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>2. Address Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.StreetAddress, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.StreetAddress, new { @class = "form-control", placeholder = "Street Address" })
+                        @Html.ValidationMessageFor(m => m.StreetAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.City, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+                        @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Province, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.Province, Model.ProvinceOptions, "Select Province", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Province, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.PostalCode, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal Code (4 digits)" })
+                        @Html.ValidationMessageFor(m => m.PostalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Contact Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>3. Contact Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "10-digit phone number starting with 0" })
+                        @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "username@dut4life.ac.za" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Medical History -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>4. Medical History</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Allergies, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(m => m.Allergies, new { @class = "form-control", rows = "3", placeholder = "List any known allergies or 'None'" })
+                        @Html.ValidationMessageFor(m => m.Allergies, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.CurrentMedications, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(m => m.CurrentMedications, new { @class = "form-control", rows = "3", placeholder = "List any current medications or 'None'" })
+                        @Html.ValidationMessageFor(m => m.CurrentMedications, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.PreExistingConditions, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(m => m.PreExistingConditions, new { @class = "form-control", rows = "3", placeholder = "List any pre-existing conditions or 'None'" })
+                        @Html.ValidationMessageFor(m => m.PreExistingConditions, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Disability Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>5. Disability/Accessibility Requirements</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">Any Disability Requirements?</label>
+                    <div class="col-md-9">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(m => m.HasDisability, true, new { @class = "form-check-input", id = "hasDisabilityYes" })
+                            <label class="form-check-label" for="hasDisabilityYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(m => m.HasDisability, false, new { @class = "form-check-input", id = "hasDisabilityNo" })
+                            <label class="form-check-label" for="hasDisabilityNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row" id="disabilityDetailsGroup" style="display: none;">
+                    @Html.LabelFor(m => m.DisabilityDetails, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(m => m.DisabilityDetails, new { @class = "form-control", rows = "3", placeholder = "Please specify your disability/accessibility requirements" })
+                        @Html.ValidationMessageFor(m => m.DisabilityDetails, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Emergency Contact -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>6. Emergency Contact Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.EmergencyContactName, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.EmergencyContactName, new { @class = "form-control", placeholder = "Full Name" })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.EmergencyContactRelationship, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.EmergencyContactRelationship, new { @class = "form-control", placeholder = "Relationship (e.g., Parent, Spouse)" })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactRelationship, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.EmergencyContactPhone, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.EmergencyContactPhone, new { @class = "form-control", placeholder = "10-digit phone number starting with 0" })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactPhone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.EmergencyContactEmail, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.EmergencyContactEmail, new { @class = "form-control", placeholder = "Optional email address" })
+                        @Html.ValidationMessageFor(m => m.EmergencyContactEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Consent and Permissions -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>7. Consent and Permissions</h4>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.ConsentForTreatment, new { @class = "form-check-input" })
+                        @Html.LabelFor(m => m.ConsentForTreatment, new { @class = "form-check-label" })
+                        @Html.ValidationMessageFor(m => m.ConsentForTreatment, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.ConfidentialityAgreement, new { @class = "form-check-input" })
+                        @Html.LabelFor(m => m.ConfidentialityAgreement, new { @class = "form-check-label" })
+                        @Html.ValidationMessageFor(m => m.ConfidentialityAgreement, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.CommunicationMethod, new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.CommunicationMethod, Model.CommunicationOptions, "Select Preferred Method", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.CommunicationMethod, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.ConsentForStudentCare, new { @class = "form-check-input" })
+                        @Html.LabelFor(m => m.ConsentForStudentCare, new { @class = "form-check-label" })
+                        @Html.ValidationMessageFor(m => m.ConsentForStudentCare, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Same form content as Create.cshtml -->
+        <!-- Change the submit button text to "Update Information" -->
+        <div class="form-group row">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save"></i> Update Information
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Same JavaScript as Create.cshtml
+        });
+    </script>
+}

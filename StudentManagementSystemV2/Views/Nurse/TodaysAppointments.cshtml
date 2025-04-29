@@ -1,0 +1,66 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.NurseDashboardViewModel
+@{
+    ViewBag.Title = "Today's Appointments";
+}
+
+<div class="container">
+    <h2 class="mb-4">Today's Appointments</h2>
+
+    @if (!Model.TodaysAppointments.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-calendar-times"></i> No appointments scheduled for today.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Student No.</th>
+                        <th>Appointment Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appt in Model.TodaysAppointments)
+                    {
+                        <tr>
+                            <td>@appt.FirstName @appt.LastName</td>
+                            <td>@appt.StudentNumber</td>
+                            <td>@appt.AppointmentTime.ToString("h:mm tt")</td>
+                            <td>@appt.Reason</td>
+                            <td>
+                                <span class="badge @(appt.Status == "CheckedIn" ? "badge-success" : "badge-warning")">
+                                    @appt.Status
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="@Url.Action("ViewDetails", new { id = appt.Id })"
+                                       class="btn btn-info" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="@Url.Action("DiagnosisForm", new { id = appt.Id })"
+                                       class="btn btn-success" title="Diagnose">
+                                        <i class="fas fa-stethoscope"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="mt-3">
+        <a href="@Url.Action("Dashboard")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>

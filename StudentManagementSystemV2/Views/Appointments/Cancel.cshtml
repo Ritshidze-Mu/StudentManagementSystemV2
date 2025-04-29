@@ -1,0 +1,52 @@
+﻿@model StudentManagementSystemV2.Models.Appointment
+
+@{
+    ViewBag.Title = "Cancel Appointment";
+}
+
+<div class="container">
+    <h2>Cancel Appointment</h2>
+    <hr />
+
+    <div class="alert alert-warning">
+        <h4>Are you sure you want to cancel this appointment?</h4>
+        <p>This action cannot be undone.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Date:</dt>
+                <dd class="col-sm-9">@Model.AppointmentDate.ToString("dddd, MMMM dd, yyyy")</dd>
+
+                <dt class="col-sm-3">Time:</dt>
+                <dd class="col-sm-9">@Model.AppointmentTime.ToString("hh:mm tt")</dd>
+
+                <dt class="col-sm-3">With:</dt>
+                <dd class="col-sm-9">@(Model.Nurse?.Name ?? "Any available nurse")</dd>
+
+                <dt class="col-sm-3">Reason:</dt>
+                <dd class="col-sm-9">@Model.Reason</dd>
+            </dl>
+
+            @using (Html.BeginForm("Cancel", "Appointments", new { id = Model.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label for="cancellationReason">Reason for cancellation (optional):</label>
+                    <textarea class="form-control" id="cancellationReason" name="cancellationReason" rows="3"></textarea>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times"></i> Confirm Cancellation
+                    </button>
+                    <a href="@Url.Action("Details", new { id = Model.Id })" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Details
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>1

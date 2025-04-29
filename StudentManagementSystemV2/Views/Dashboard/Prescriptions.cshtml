@@ -1,0 +1,46 @@
+﻿@model List<StudentManagementSystemV2.Models.Prescription>
+
+@{
+    ViewBag.Title = "My Prescriptions";
+}
+
+<div class="container">
+    <h2><i class="fas fa-prescription-bottle-alt me-2"></i> My Prescriptions</h2>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Medication</th>
+                            <th>Dosage</th>
+                            <th>Frequency</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prescription in Model)
+                        {
+                            <tr>
+                                <td>@prescription.Appointment.AppointmentDate.ToString("dd/MM/yyyy")</td>
+                                <td>@prescription.Medication</td>
+                                <td>@prescription.Dosage</td>
+                                <td>@prescription.Frequency</td>
+                                <td>@prescription.Duration</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No prescription records found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

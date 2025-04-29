@@ -1,0 +1,101 @@
+﻿@model StudentManagementSystemV2.Models.ViewModels.ReceptionistDashboardViewModel
+
+
+@{
+    ViewBag.Title = "Receptionist Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Receptionist Dashboard</h2>
+
+    <div class="row">
+        <!-- Today's Appointments Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Today's Appointments</h5>
+                    <h1 class="display-4">@Model.TodaysAppointmentsCount</h1>
+                    <p class="card-text">Appointments scheduled for today</p>
+                    <a href="@Url.Action("Index", "Receptionist")" class="btn btn-light">
+                        <i class="fas fa-calendar-alt"></i> View All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Check-Ins Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Check-Ins</h5>
+                    <h1 class="display-4">@Model.PendingCheckInsCount</h1>
+                    <p class="card-text">Patients yet to arrive</p>
+                    <a href="@Url.Action("Index", "Receptionist", new { filterStatus = "Confirmed" })"
+                       class="btn btn-light">
+                        <i class="fas fa-user-clock"></i> Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancellations Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Cancellations</h5>
+                    <h1 class="display-4">@Model.NoShowsCount</h1>
+                    <p class="card-text">No-shows or cancellations</p>
+                    <a href="@Url.Action("ManageCancellations", "Receptionist")" class="btn btn-light">
+                        <i class="fas fa-calendar-times"></i> Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Row -->
+    <div class="row mt-4">
+        <div class="col-md-3 mb-3">
+            <a href="@Url.Action("Index", "Receptionist")" class="btn btn-outline-primary btn-block py-3">
+                <i class="fas fa-list fa-2x mb-2"></i><br>
+                View Appointments
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="@Url.Action("ManageCancellations", "Receptionist")" class="btn btn-outline-danger btn-block py-3">
+                <i class="fas fa-ban fa-2x mb-2"></i><br>
+                Cancel Appointments
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="@Url.Action("Index", "Receptionist", new { filterStatus = "Confirmed" })"
+               class="btn btn-outline-success btn-block py-3">
+                <i class="fas fa-check-circle fa-2x mb-2"></i><br>
+                Check-In Patients
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="#" class="btn btn-outline-info btn-block py-3">
+                <i class="fas fa-search fa-2x mb-2"></i><br>
+                Find Patient
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            transition: transform 0.3s;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+        .btn-block {
+            height: 100%;
+        }
+    </style>
+}
